@@ -1,4 +1,5 @@
 import java.io.*;
+
 import java.util.*;
 
 import javax.swing.JButton;
@@ -16,9 +17,9 @@ public class DownloadManager extends JFrame implements Observer{
 	private JTextField addText;
 	private JButton resumeButton,pauseButton,cancelButton,clearButton;
 	private DownloadTableModel tableModel;
-	JTable table;
+	private JTable table;
 	private boolean clearing;
-	private  Download selectedDownload;
+	private Download selectedDownload;
 	public DownloadManager(){
 		setTitle("Personal Download Manager");
 		setSize(600,1000);
@@ -92,12 +93,12 @@ public class DownloadManager extends JFrame implements Observer{
 		cancelButton.setEnabled(false);
 		buttonPanel.add(cancelButton);
 		clearButton=new JButton("CLEAR");
-		pauseButton.addActionListener(new ActionListener(){
+		clearButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
 				actionClear();
 			}
 		});
-		pauseButton.setEnabled(false);
+		clearButton.setEnabled(false);
 		buttonPanel.add(clearButton);
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(addPanel,BorderLayout.NORTH);
@@ -117,7 +118,7 @@ public class DownloadManager extends JFrame implements Observer{
 			}
 		}
 		private URL verifyUrl(String urlName){
-			if((!urlName.toLowerCase().startsWith("https://"))&&(!urlName.toLowerCase().startsWith("http://")))
+			if(!urlName.toLowerCase().startsWith("http://"))
 				return null;
 			URL urlVerify=null;
 			try{
@@ -172,17 +173,15 @@ public class DownloadManager extends JFrame implements Observer{
 										cancelButton.setEnabled(true);
 										clearButton.setEnabled(false);
 										break;
-					case Download.RESUME:pauseButton.setEnabled(true);
-										resumeButton.setEnabled(false);
-										cancelButton.setEnabled(true);
-										clearButton.setEnabled(false);
+					case Download.ERROR:pauseButton.setEnabled(false);
+										resumeButton.setEnabled(true);
+										cancelButton.setEnabled(false);
+										clearButton.setEnabled(true);
 										break;
 								default:pauseButton.setEnabled(false);
 										resumeButton.setEnabled(false);
 										cancelButton.setEnabled(false);
 										clearButton.setEnabled(true);
-										break;
-							
 					}
 				}
 				else{
